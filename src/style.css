@@ -4,16 +4,16 @@
 :root {
   font-family: "Noto Sans KR Variable", "Noto Sans KR", sans-serif;
   color: #f2f4f1;
-  background: #0c1214;
+  background: #101112;
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
-  --ink: #f2f4f1;
-  --muted: #8e9b9c;
-  --line: rgba(183, 207, 202, 0.15);
-  --panel: rgba(21, 29, 31, 0.92);
-  --accent: #abc8be;
-  --accent-deep: #263b39;
+  --ink: #f0f0ed;
+  --muted: #93979c;
+  --line: rgba(220, 220, 214, 0.13);
+  --panel: rgba(24, 25, 27, 0.94);
+  --accent: #e1c96f;
+  --accent-deep: #413b2b;
 }
 
 * {
@@ -32,8 +32,8 @@ body {
   min-height: 100vh;
   overflow: hidden;
   background:
-    radial-gradient(ellipse 58% 46% at 50% 47%, rgba(91, 135, 126, 0.105), transparent 72%),
-    linear-gradient(155deg, #0d1416 0%, #0b1012 58%, #101719 100%);
+    radial-gradient(ellipse 58% 46% at 50% 47%, rgba(255, 255, 255, 0.025), transparent 72%),
+    linear-gradient(155deg, #121315 0%, #0e0f10 58%, #131416 100%);
   transition: color 420ms ease, filter 420ms ease, background 420ms ease;
 }
 
@@ -55,16 +55,16 @@ select {
 button {
   border: 1px solid var(--line);
   border-radius: 10px;
-  color: #dde4e1;
-  background: rgba(39, 51, 53, 0.72);
+  color: #dededb;
+  background: rgba(45, 46, 49, 0.72);
   cursor: pointer;
   transition: color 160ms ease, background 160ms ease, border-color 160ms ease, opacity 160ms ease, transform 160ms ease;
 }
 
 button:hover:not(:disabled) {
-  border-color: rgba(183, 207, 202, 0.32);
+  border-color: rgba(218, 218, 210, 0.3);
   color: #fff;
-  background: rgba(50, 66, 68, 0.86);
+  background: rgba(59, 60, 63, 0.88);
 }
 
 button:active:not(:disabled) {
@@ -74,7 +74,7 @@ button:active:not(:disabled) {
 button:focus-visible,
 input:focus-visible,
 select:focus-visible {
-  outline: 2px solid rgba(171, 200, 190, 0.68);
+  outline: 2px solid rgba(225, 201, 111, 0.72);
   outline-offset: 3px;
 }
 
@@ -108,7 +108,7 @@ button:disabled {
   display: flex;
   align-items: center;
   gap: 9px;
-  color: #c3cfcb;
+  color: #c7c7c3;
   font-family: "Inter Variable", sans-serif;
   font-size: clamp(0.66rem, 0.75vw, 0.78rem);
   font-weight: 690;
@@ -120,7 +120,7 @@ button:disabled {
   width: 3px;
   height: 3px;
   border-radius: 50%;
-  background: var(--accent);
+  background: #d8bd62;
 }
 
 .status-group {
@@ -132,10 +132,10 @@ button:disabled {
 
 .phase-badge {
   padding: 6px 11px 7px;
-  border: 1px solid rgba(171, 200, 190, 0.27);
+  border: 1px solid rgba(205, 205, 198, 0.22);
   border-radius: 999px;
-  color: #c8d6d1;
-  background: rgba(30, 46, 46, 0.45);
+  color: #cdcdca;
+  background: rgba(39, 40, 43, 0.58);
   font-size: clamp(0.72rem, 0.85vw, 0.86rem);
   font-weight: 650;
   letter-spacing: -0.01em;
@@ -162,12 +162,12 @@ button:disabled {
 }
 
 .subtle-status[data-state="on"] {
-  color: #9db8af;
+  color: #94b7d2;
 }
 
 .subtle-status[data-state="on"]::before {
-  background: #8db6a8;
-  box-shadow: 0 0 8px rgba(141, 182, 168, 0.4);
+  background: #83aecd;
+  box-shadow: 0 0 8px rgba(131, 174, 205, 0.36);
 }
 
 .subtle-status[data-state="error"] {
@@ -192,7 +192,7 @@ button:disabled {
 }
 
 .current-clock {
-  color: #cbd4d1;
+  color: #8fd8c5;
   font-family: "Inter Variable", sans-serif;
   font-size: clamp(1.15rem, 1.65vw, 1.65rem);
   font-variant-numeric: tabular-nums;
@@ -215,7 +215,7 @@ button:disabled {
 .phase-message {
   min-height: 1.5em;
   margin: 0 0 clamp(18px, 2.6vh, 30px);
-  color: #9dadaa;
+  color: #a7a9aa;
   font-size: clamp(1rem, 1.55vw, 1.48rem);
   font-weight: 520;
   letter-spacing: -0.025em;
@@ -239,10 +239,10 @@ button:disabled {
   gap: 12px;
   margin: clamp(32px, 4.8vh, 54px) 0 0;
   padding: 8px 14px;
-  border: 1px solid rgba(179, 202, 198, 0.11);
+  border: 1px solid rgba(210, 210, 203, 0.11);
   border-radius: 999px;
   color: #6f7e7f;
-  background: rgba(20, 29, 31, 0.44);
+  background: rgba(28, 29, 31, 0.48);
   font-size: clamp(0.78rem, 1vw, 0.94rem);
 }
 
@@ -251,7 +251,7 @@ button:disabled {
 }
 
 .end-line strong {
-  color: #aebbb7;
+  color: #bdbdb8;
   font-family: "Inter Variable", "Noto Sans KR Variable", sans-serif;
   font-variant-numeric: tabular-nums;
   font-weight: 550;
@@ -269,9 +269,9 @@ button:disabled {
   align-items: center;
   gap: 4px;
   padding: 5px;
-  border: 1px solid rgba(181, 205, 200, 0.13);
+  border: 1px solid rgba(216, 216, 208, 0.13);
   border-radius: 15px;
-  background: rgba(19, 27, 29, 0.7);
+  background: rgba(24, 25, 27, 0.74);
   box-shadow: 0 12px 38px rgba(0, 0, 0, 0.18);
   backdrop-filter: blur(18px);
 }
@@ -284,16 +284,16 @@ button:disabled {
 }
 
 .primary-button {
-  border-color: rgba(174, 203, 193, 0.28);
-  color: #f0f5f2;
-  background: #36514d;
+  border-color: rgba(224, 200, 111, 0.3);
+  color: #f1ecdc;
+  background: #4a4433;
   font-size: 0.88rem;
   font-weight: 640;
   letter-spacing: -0.02em;
 }
 
 .primary-button:hover:not(:disabled) {
-  background: #42605b;
+  background: #5a5139;
 }
 
 .quiet-button {
@@ -308,7 +308,7 @@ button:disabled {
   width: 1px;
   height: 20px;
   margin: 0 3px;
-  background: rgba(192, 211, 207, 0.13);
+  background: rgba(215, 215, 208, 0.13);
 }
 
 .settings-panel {
@@ -320,9 +320,9 @@ button:disabled {
   height: 100vh;
   padding: 30px;
   overflow-y: auto;
-  border-left: 1px solid rgba(184, 207, 202, 0.14);
-  color: #e3e9e6;
-  background: rgba(16, 23, 25, 0.975);
+  border-left: 1px solid rgba(214, 214, 207, 0.14);
+  color: #e5e5e2;
+  background: rgba(20, 21, 23, 0.98);
   box-shadow: -24px 0 70px rgba(0, 0, 0, 0.34);
   backdrop-filter: blur(24px);
 }
@@ -343,7 +343,7 @@ button:disabled {
 .test-controls h3,
 .dev-panel h3 {
   margin: 0;
-  color: #e7ece9;
+  color: #e8e8e5;
   font-size: 1rem;
   font-weight: 620;
   letter-spacing: -0.025em;
@@ -368,7 +368,7 @@ button:disabled {
 .test-controls,
 .dev-panel {
   padding: 0 0 25px;
-  border-bottom: 1px solid rgba(185, 207, 203, 0.11);
+  border-bottom: 1px solid rgba(215, 215, 208, 0.11);
 }
 
 .tts-settings,
@@ -384,7 +384,7 @@ button:disabled {
 }
 
 .preview-copy strong {
-  color: #dce5e1;
+  color: #e0e0dc;
   font-size: 0.88rem;
   font-weight: 600;
 }
@@ -413,7 +413,7 @@ button:disabled {
   display: grid;
   gap: 8px;
   margin-bottom: 17px;
-  color: #aab6b3;
+  color: #afb0b1;
   font-size: 0.82rem;
   font-weight: 500;
 }
@@ -423,16 +423,16 @@ button:disabled {
   width: 100%;
   min-height: 44px;
   padding: 8px 11px;
-  border: 1px solid rgba(179, 203, 198, 0.17);
+  border: 1px solid rgba(213, 213, 205, 0.17);
   border-radius: 9px;
-  color: #e6ece9;
+  color: #e8e8e5;
   color-scheme: dark;
-  background: rgba(35, 46, 48, 0.72);
+  background: rgba(43, 44, 47, 0.76);
 }
 
 .settings-panel input[type="range"] {
   width: 100%;
-  accent-color: #8eaea4;
+  accent-color: #d6bd67;
 }
 
 .switch-row {
@@ -444,7 +444,7 @@ button:disabled {
 .switch-row input {
   width: 19px;
   height: 19px;
-  accent-color: #789b90;
+  accent-color: #d6bd67;
 }
 
 .voice-status-row {
@@ -453,14 +453,14 @@ button:disabled {
   justify-content: space-between;
   gap: 18px;
   margin-bottom: 17px;
-  color: #aab6b3;
+  color: #afb0b1;
   font-size: 0.82rem;
   font-weight: 500;
 }
 
 .voice-status-row strong {
   overflow: hidden;
-  color: #8fa9a1;
+  color: #93b3ca;
   font-size: 0.76rem;
   font-weight: 560;
   text-align: right;
@@ -474,7 +474,7 @@ button:disabled {
 
 .compact-button {
   width: 100%;
-  color: #d9e3df;
+  color: #dfdfdc;
   font-size: 0.84rem;
   font-weight: 590;
 }
@@ -512,10 +512,10 @@ button:disabled {
 .past-dialog {
   width: min(520px, calc(100vw - 32px));
   padding: 30px;
-  border: 1px solid rgba(182, 205, 200, 0.18);
+  border: 1px solid rgba(215, 215, 207, 0.18);
   border-radius: 17px;
-  color: #e9eeeb;
-  background: #151e20;
+  color: #eaeae7;
+  background: #1a1b1d;
   box-shadow: 0 28px 100px rgba(0, 0, 0, 0.58);
 }
 
@@ -551,11 +551,11 @@ button:disabled {
   bottom: 91px;
   max-width: min(540px, calc(100vw - 32px));
   padding: 11px 16px 12px;
-  border: 1px solid rgba(181, 205, 200, 0.18);
+  border: 1px solid rgba(216, 216, 208, 0.18);
   border-radius: 10px;
   opacity: 0;
-  color: #dfe7e3;
-  background: rgba(34, 47, 49, 0.96);
+  color: #e2e2df;
+  background: rgba(45, 46, 49, 0.97);
   box-shadow: 0 14px 42px rgba(0, 0, 0, 0.32);
   font-size: 0.83rem;
   pointer-events: none;
@@ -570,7 +570,7 @@ button:disabled {
 
 body[data-phase="waiting"] {
   filter: saturate(0.38);
-  background: #121718;
+  background: #151617;
 }
 
 body[data-phase="waiting"] .remaining-time {
@@ -584,35 +584,35 @@ body[data-phase="waiting"] .topbar {
 }
 
 body[data-phase="active"] .remaining-time {
-  color: #e4ece8;
+  color: #f0d56f;
   text-shadow: 0 16px 62px rgba(0, 0, 0, 0.22);
 }
 
 body[data-phase="active"] .phase-badge {
-  border-color: rgba(159, 195, 183, 0.3);
-  color: #9fc3b7;
-  background: rgba(30, 46, 46, 0.45);
+  border-color: rgba(226, 202, 111, 0.34);
+  color: #ddc76f;
+  background: rgba(48, 45, 35, 0.5);
 }
 
 body[data-phase="active"] .phase-message {
-  color: #9fc2b6;
+  color: #cdbd7c;
 }
 
 body[data-phase="active"] .current-clock {
-  color: #bdccc7;
+  color: #8fd8c5;
 }
 
 body[data-phase="active"] .brand-mark i {
-  background: #91b6aa;
+  background: #d8bd62;
 }
 
 body[data-phase="active"] .end-line {
-  border-color: rgba(166, 197, 187, 0.15);
-  background: rgba(20, 29, 31, 0.44);
+  border-color: rgba(218, 198, 121, 0.18);
+  background: rgba(42, 40, 33, 0.45);
 }
 
 body[data-phase="active"] .end-line strong {
-  color: #a9c1b9;
+  color: #d3c17a;
 }
 
 body[data-phase="ended"] {

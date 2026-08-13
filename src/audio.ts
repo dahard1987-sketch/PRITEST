@@ -14,22 +14,23 @@ interface ToneNote {
   duration: number;
   gain: number;
   waveform?: OscillatorType;
+  attack?: number;
 }
 
 export const TICK_NOTES: readonly ToneNote[] = [
-  { frequency: 783.99, start: 0, duration: 0.3, gain: 0.17 },
-  { frequency: 659.25, start: 0.36, duration: 0.54, gain: 0.18 },
+  { frequency: 1046.5, start: 0, duration: 0.3, gain: 0.2, waveform: "triangle", attack: 0.008 },
+  { frequency: 783.99, start: 0.36, duration: 0.54, gain: 0.21, waveform: "triangle", attack: 0.008 },
 ];
 
 const jingleMelody: readonly ToneNote[] = [
-  { frequency: 659.25, start: 0, duration: 0.34, gain: 0.12 },
-  { frequency: 523.25, start: 0.46, duration: 0.34, gain: 0.12 },
-  { frequency: 587.33, start: 0.92, duration: 0.34, gain: 0.12 },
-  { frequency: 392, start: 1.38, duration: 0.58, gain: 0.13 },
-  { frequency: 392, start: 2.02, duration: 0.34, gain: 0.12 },
-  { frequency: 587.33, start: 2.48, duration: 0.34, gain: 0.12 },
-  { frequency: 659.25, start: 2.94, duration: 0.34, gain: 0.12 },
-  { frequency: 523.25, start: 3.4, duration: 0.78, gain: 0.14 },
+  { frequency: 659.25, start: 0, duration: 0.32, gain: 0.12 },
+  { frequency: 523.25, start: 0.4, duration: 0.32, gain: 0.12 },
+  { frequency: 587.33, start: 0.8, duration: 0.32, gain: 0.12 },
+  { frequency: 392, start: 1.2, duration: 0.75, gain: 0.13 },
+  { frequency: 392, start: 2.2, duration: 0.32, gain: 0.12 },
+  { frequency: 587.33, start: 2.6, duration: 0.32, gain: 0.12 },
+  { frequency: 659.25, start: 3, duration: 0.32, gain: 0.12 },
+  { frequency: 523.25, start: 3.4, duration: 0.75, gain: 0.14 },
 ];
 
 // A quiet, slightly detuned octave partial gives the melody a bell-like school chime timbre.
@@ -167,7 +168,7 @@ export class AudioController {
       oscillator.type = note.waveform ?? "sine";
       oscillator.frequency.setValueAtTime(note.frequency, noteStart);
       gain.gain.setValueAtTime(0.0001, noteStart);
-      gain.gain.exponentialRampToValueAtTime(note.gain * this.audioVolume, noteStart + 0.025);
+      gain.gain.exponentialRampToValueAtTime(note.gain * this.audioVolume, noteStart + (note.attack ?? 0.025));
       gain.gain.exponentialRampToValueAtTime(0.0001, noteEnd);
       oscillator.connect(gain).connect(this.context!.destination);
       oscillator.start(noteStart);
