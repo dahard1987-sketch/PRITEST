@@ -54,15 +54,26 @@
           <p id="scheduleSummary" class="settings-note"></p>
         </div>
 
+        <div class="preview-settings">
+          <div class="preview-copy">
+            <strong>화면 상태 미리보기</strong>
+            <span>일정과 알림 실행 상태에는 영향을 주지 않습니다.</span>
+          </div>
+          <div class="preview-buttons">
+            <button id="previewActiveButton" type="button">활성 화면 보기</button>
+            <button id="previewActualButton" type="button" disabled>실제 상태로 복귀</button>
+          </div>
+        </div>
+
         <div class="tts-settings">
           <label class="switch-row">
             <span>TTS 안내 사용</span>
             <input id="ttsEnabledInput" type="checkbox" checked />
           </label>
-          <label>
-            TTS 음성
-            <select id="voiceSelect"></select>
-          </label>
+          <div class="voice-status-row">
+            <span>TTS 음성</span>
+            <strong id="googleVoiceStatus">Google 한국어 음성 확인 중</strong>
+          </div>
           <label>
             TTS 볼륨 <output id="ttsVolumeOutput">90%</output>
             <input id="ttsVolumeInput" type="range" min="0" max="1" step="0.05" value="0.9" />
