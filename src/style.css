@@ -363,6 +363,7 @@ button:disabled {
 }
 
 .schedule-settings,
+.preview-settings,
 .tts-settings,
 .test-controls,
 .dev-panel {
@@ -371,9 +372,41 @@ button:disabled {
 }
 
 .tts-settings,
+.preview-settings,
 .test-controls,
 .dev-panel {
   padding-top: 25px;
+}
+
+.preview-copy {
+  display: grid;
+  gap: 5px;
+}
+
+.preview-copy strong {
+  color: #dce5e1;
+  font-size: 0.88rem;
+  font-weight: 600;
+}
+
+.preview-copy span {
+  color: #73817f;
+  font-size: 0.74rem;
+  line-height: 1.5;
+}
+
+.preview-buttons {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin-top: 14px;
+}
+
+.preview-buttons button {
+  min-height: 42px;
+  padding: 8px;
+  font-size: 0.79rem;
+  font-weight: 560;
 }
 
 .settings-panel label {
@@ -412,6 +445,31 @@ button:disabled {
   width: 19px;
   height: 19px;
   accent-color: #789b90;
+}
+
+.voice-status-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  margin-bottom: 17px;
+  color: #aab6b3;
+  font-size: 0.82rem;
+  font-weight: 500;
+}
+
+.voice-status-row strong {
+  overflow: hidden;
+  color: #8fa9a1;
+  font-size: 0.76rem;
+  font-weight: 560;
+  text-align: right;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.voice-status-row strong[data-state="error"] {
+  color: #b28c85;
 }
 
 .compact-button {
@@ -526,7 +584,35 @@ body[data-phase="waiting"] .topbar {
 }
 
 body[data-phase="active"] .remaining-time {
-  text-shadow: 0 18px 70px rgba(64, 102, 95, 0.12);
+  color: #e4ece8;
+  text-shadow: 0 16px 62px rgba(0, 0, 0, 0.22);
+}
+
+body[data-phase="active"] .phase-badge {
+  border-color: rgba(159, 195, 183, 0.3);
+  color: #9fc3b7;
+  background: rgba(30, 46, 46, 0.45);
+}
+
+body[data-phase="active"] .phase-message {
+  color: #9fc2b6;
+}
+
+body[data-phase="active"] .current-clock {
+  color: #bdccc7;
+}
+
+body[data-phase="active"] .brand-mark i {
+  background: #91b6aa;
+}
+
+body[data-phase="active"] .end-line {
+  border-color: rgba(166, 197, 187, 0.15);
+  background: rgba(20, 29, 31, 0.44);
+}
+
+body[data-phase="active"] .end-line strong {
+  color: #a9c1b9;
 }
 
 body[data-phase="ended"] {

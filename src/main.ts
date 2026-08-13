@@ -17,7 +17,6 @@ import {
 
 interface Preferences {
   ttsEnabled: boolean;
-  voiceUri: string;
   ttsVolume: number;
   audioVolume: number;
 }
@@ -55,8 +54,10 @@ const ui = {
   endDateTimeInput: byId<HTMLInputElement>("endDateTimeInput"),
   applyScheduleButton: byId<HTMLButtonElement>("applyScheduleButton"),
   scheduleSummary: byId("scheduleSummary"),
+  previewActiveButton: byId<HTMLButtonElement>("previewActiveButton"),
+  previewActualButton: byId<HTMLButtonElement>("previewActualButton"),
   ttsEnabledInput: byId<HTMLInputElement>("ttsEnabledInput"),
-  voiceSelect: byId<HTMLSelectElement>("voiceSelect"),
+  googleVoiceStatus: byId("googleVoiceStatus"),
   ttsVolumeInput: byId<HTMLInputElement>("ttsVolumeInput"),
   ttsVolumeOutput: byId<HTMLOutputElement>("ttsVolumeOutput"),
   audioVolumeInput: byId<HTMLInputElement>("audioVolumeInput"),
@@ -78,9 +79,10 @@ let wakeLock: WakeLockSentinel | null = null;
 let preparing = false;
 let endingSequenceRunning = false;
 let toastTimer = 0;
+let visualPreview: ExamPhase | null = null;
 
 function loadPreferences(): Preferences {
-  const fallback: Preferences = { ttsEnabled: true, voiceUri: "", ttsVolume: 0.9, audioVolume: 0.85 };
+  const fallback: Preferences = { ttsEnabled: true, ttsVolume: 0.9, audioVolume: 0.85 };
   try {
     return { ...fallback, ...JSON.parse(localStorage.getItem(PREFS_KEY) ?? "{}") } as Preferences;
   } catch {
@@ -106,6 +108,9 @@ function newSession(endTimeMs: number, completed: string[] = []): void {
   session = { id: crypto.randomUUID(), endTimeMs, completed };
   previousRemainingMs = null;
   endingSequenceRunning = false;
+  visualPreview = null;
+  ui.previewActiveButton.disabled = false;
+  ui.previewActualButton.disabled = true;
   audio.stopAlerts();
   audio.listeningAudio.pause();
   audio.listeningPlaying = false;
@@ -117,7 +122,6 @@ function newSession(endTimeMs: number, completed: string[] = []): void {
 function savePreferences(): void {
   const preferences: Preferences = {
     ttsEnabled: audio.ttsEnabled,
-    voiceUri: audio.selectedVoiceUri,
     ttsVolume: audio.ttsVolume,
     audioVolume: audio.audioVolume,
   };
@@ -143,7 +147,8 @@ function formatClock(date: Date, includeDate = false): string {
 
 function render(nowMs: number): void {
   const remainingMs = getRemainingMs(session.endTimeMs, nowMs);
-  const phase = getPhase(remainingMs);
+  const actualPhase = getPhase(remainingMs);
+  const phase = visualPreview ?? actualPhase;
   const now = new Date(nowMs);
   const end = new Date(session.endTimeMs);
   const start = new Date(session.endTimeMs - EXAM_DURATION_MS);
@@ -161,7 +166,15 @@ function render(nowMs: number): void {
     ended: ["시험 종료", "시험이 종료되었습니다"],
   };
   ui.phaseBadge.textContent = labels[phase][0];
-  ui.phaseMessage.textContent = labels[phase][1];
+  ui.phaseMessage.textContent = visualPreview === "active" ? "화면 미리보기 · 영어 영역" : labels[phase][1];
+}
+
+function setVisualPreview(phase: ExamPhase | null): void {
+  visualPreview = phase;
+  ui.previewActiveButton.disabled = phase === "active";
+  ui.previewActualButton.disabled = phase === null;
+  render(Date.now());
+  showToast(phase === "active" ? "활성 화면 미리보기 · 실제 일정과 알림은 그대로 유지됩니다." : "실제 일정 상태로 돌아왔습니다.");
 }
 
 async function handleEvent(event: ScheduleEvent): Promise<void> {
@@ -270,36 +283,23 @@ function updateScheduleControls(): void {
   ui.scheduleSummary.textContent = `5분 전 안내 ${formatClock(prestart, true)} · 시작 ${formatClock(start, true)} · 종료 ${formatClock(end, true)}`;
 }
 
-function updateVoices(): void {
-  const voices = audio.getKoreanVoices();
-  ui.voiceSelect.replaceChildren();
-  if (voices.length === 0) {
-    ui.voiceSelect.add(new Option("한국어 음성 없음 · tick만 사용", ""));
-    ui.voiceSelect.disabled = true;
-    return;
-  }
-  ui.voiceSelect.disabled = false;
-  for (const voice of voices) ui.voiceSelect.add(new Option(`${voice.name} (${voice.lang})`, voice.voiceURI));
-  const wanted = voices.some((voice) => voice.voiceURI === audio.selectedVoiceUri)
-    ? audio.selectedVoiceUri
-    : voices[0].voiceURI;
-  audio.selectedVoiceUri = wanted;
-  ui.voiceSelect.value = wanted;
-  savePreferences();
+function updateGoogleVoiceStatus(): void {
+  const voice = audio.getGoogleKoreanVoice();
+  ui.googleVoiceStatus.textContent = voice ? voice.name : "사용 불가 · tick만 재생";
+  ui.googleVoiceStatus.dataset.state = voice ? "on" : "error";
 }
 
 function initializeSettings(): void {
   const preferences = loadPreferences();
   audio.ttsEnabled = preferences.ttsEnabled;
-  audio.selectedVoiceUri = preferences.voiceUri;
   audio.setVolumes(preferences.audioVolume, preferences.ttsVolume);
   ui.ttsEnabledInput.checked = preferences.ttsEnabled;
   ui.ttsVolumeInput.value = String(preferences.ttsVolume);
   ui.audioVolumeInput.value = String(preferences.audioVolume);
   ui.ttsVolumeOutput.value = `${Math.round(preferences.ttsVolume * 100)}%`;
   ui.audioVolumeOutput.value = `${Math.round(preferences.audioVolume * 100)}%`;
-  updateVoices();
-  speechSynthesis.addEventListener("voiceschanged", updateVoices);
+  updateGoogleVoiceStatus();
+  speechSynthesis.addEventListener("voiceschanged", updateGoogleVoiceStatus);
 }
 
 function toggleSettings(force?: boolean): void {
@@ -346,14 +346,12 @@ ui.applyScheduleButton.addEventListener("click", () => {
   newSession(endTimeMs);
   showToast("새 종료 시각과 안내 일정을 적용했습니다.");
 });
+ui.previewActiveButton.addEventListener("click", () => setVisualPreview("active"));
+ui.previewActualButton.addEventListener("click", () => setVisualPreview(null));
 
 ui.ttsEnabledInput.addEventListener("change", () => {
   audio.ttsEnabled = ui.ttsEnabledInput.checked;
   if (!audio.ttsEnabled) speechSynthesis.cancel();
-  savePreferences();
-});
-ui.voiceSelect.addEventListener("change", () => {
-  audio.selectedVoiceUri = ui.voiceSelect.value;
   savePreferences();
 });
 ui.ttsVolumeInput.addEventListener("input", () => {

@@ -8,6 +8,36 @@ interface SoundHandle {
   stop: () => void;
 }
 
+interface ToneNote {
+  frequency: number;
+  start: number;
+  duration: number;
+  gain: number;
+  waveform?: OscillatorType;
+}
+
+export const TICK_NOTES: readonly ToneNote[] = [
+  { frequency: 783.99, start: 0, duration: 0.3, gain: 0.17 },
+  { frequency: 659.25, start: 0.36, duration: 0.54, gain: 0.18 },
+];
+
+const jingleMelody: readonly ToneNote[] = [
+  { frequency: 659.25, start: 0, duration: 0.34, gain: 0.12 },
+  { frequency: 523.25, start: 0.46, duration: 0.34, gain: 0.12 },
+  { frequency: 587.33, start: 0.92, duration: 0.34, gain: 0.12 },
+  { frequency: 392, start: 1.38, duration: 0.58, gain: 0.13 },
+  { frequency: 392, start: 2.02, duration: 0.34, gain: 0.12 },
+  { frequency: 587.33, start: 2.48, duration: 0.34, gain: 0.12 },
+  { frequency: 659.25, start: 2.94, duration: 0.34, gain: 0.12 },
+  { frequency: 523.25, start: 3.4, duration: 0.78, gain: 0.14 },
+];
+
+// A quiet, slightly detuned octave partial gives the melody a bell-like school chime timbre.
+export const JINGLE_NOTES: readonly ToneNote[] = jingleMelody.flatMap((note) => [
+  note,
+  { ...note, frequency: note.frequency * 2.01, gain: note.gain * 0.2 },
+]);
+
 export class AudioController {
   private context: AudioContext | null = null;
   private readonly liveNodes = new Set<OscillatorNode>();
@@ -23,7 +53,6 @@ export class AudioController {
   audioVolume = 0.85;
   ttsVolume = 0.9;
   ttsEnabled = true;
-  selectedVoiceUri = "";
 
   constructor() {
     this.listeningAudio.preload = "auto";
@@ -105,26 +134,15 @@ export class AudioController {
   }
 
   playTick(group: SoundGroup = "live"): SoundHandle {
-    return this.makeToneSequence(
-      [{ frequency: 660, start: 0, duration: 0.11, gain: 0.18 }],
-      group,
-    );
+    return this.makeToneSequence(TICK_NOTES, group);
   }
 
   playJingle(group: SoundGroup = "live"): SoundHandle {
-    return this.makeToneSequence(
-      [
-        { frequency: 523.25, start: 0, duration: 0.2, gain: 0.14 },
-        { frequency: 659.25, start: 0.25, duration: 0.2, gain: 0.14 },
-        { frequency: 783.99, start: 0.5, duration: 0.24, gain: 0.15 },
-        { frequency: 1046.5, start: 0.77, duration: 0.74, gain: 0.14 },
-      ],
-      group,
-    );
+    return this.makeToneSequence(JINGLE_NOTES, group);
   }
 
   private makeToneSequence(
-    notes: Array<{ frequency: number; start: number; duration: number; gain: number }>,
+    notes: readonly ToneNote[],
     group: SoundGroup,
   ): SoundHandle {
     let stopped = false;
@@ -146,7 +164,7 @@ export class AudioController {
       const gain = this.context!.createGain();
       const noteStart = startAt + note.start;
       const noteEnd = noteStart + note.duration;
-      oscillator.type = "sine";
+      oscillator.type = note.waveform ?? "sine";
       oscillator.frequency.setValueAtTime(note.frequency, noteStart);
       gain.gain.setValueAtTime(0.0001, noteStart);
       gain.gain.exponentialRampToValueAtTime(note.gain * this.audioVolume, noteStart + 0.025);
@@ -176,8 +194,7 @@ export class AudioController {
 
   async speak(text: string): Promise<void> {
     if (!this.ttsEnabled || !("speechSynthesis" in window)) return;
-    const voice = this.getKoreanVoices().find((item) => item.voiceURI === this.selectedVoiceUri)
-      ?? this.getKoreanVoices()[0];
+    const voice = this.getGoogleKoreanVoice();
     if (!voice) return;
 
     speechSynthesis.cancel();
@@ -194,8 +211,10 @@ export class AudioController {
     });
   }
 
-  getKoreanVoices(): SpeechSynthesisVoice[] {
-    return speechSynthesis.getVoices().filter((voice) => voice.lang.toLowerCase().startsWith("ko"));
+  getGoogleKoreanVoice(): SpeechSynthesisVoice | undefined {
+    return speechSynthesis.getVoices().find((voice) =>
+      voice.lang.toLowerCase().startsWith("ko") && voice.name.toLowerCase().includes("google"),
+    );
   }
 
   stopAlerts(): void {
