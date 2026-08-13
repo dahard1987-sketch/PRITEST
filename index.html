@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#15191f" />
+    <title>수능 영어 모의고사 시계</title>
+  </head>
+  <body data-phase="waiting">
+    <div id="app">
+      <header class="topbar">
+        <div class="status-rail">
+          <span class="brand-mark">PRIME <i></i> ENGLISH</span>
+          <div class="status-group">
+            <span id="phaseBadge" class="phase-badge">시험 대기</span>
+            <span id="readyStatus" class="subtle-status">오디오 준비 필요</span>
+            <span id="wakeStatus" class="subtle-status">Wake Lock 꺼짐</span>
+          </div>
+        </div>
+        <div class="clock-block">
+          <span>현재 시각</span>
+          <time id="currentClock" class="current-clock" aria-label="현재 시각">--:--:--</time>
+        </div>
+      </header>
+
+      <main class="timer-stage" aria-live="polite">
+        <p id="phaseMessage" class="phase-message">시험 시작 전</p>
+        <time id="remainingTime" class="remaining-time">--:--</time>
+        <p class="end-line"><span>종료 예정</span><strong id="endTimeDisplay">--:--</strong></p>
+      </main>
+
+      <footer class="controls">
+        <div class="control-dock">
+          <button id="prepareButton" class="primary-button" type="button">시험 준비 · 오디오 활성화</button>
+          <span class="dock-divider" aria-hidden="true"></span>
+          <button id="fullscreenButton" class="quiet-button" type="button">전체화면</button>
+          <button id="settingsButton" class="quiet-button" type="button" aria-expanded="false" aria-controls="settingsPanel">설정</button>
+        </div>
+      </footer>
+
+      <aside id="settingsPanel" class="settings-panel" hidden>
+        <div class="settings-heading">
+          <h2>시험 설정</h2>
+          <button id="closeSettingsButton" class="icon-button" type="button" aria-label="설정 닫기">×</button>
+        </div>
+
+        <div class="schedule-settings">
+          <label>
+            시험 종료 시각
+            <input id="endDateTimeInput" type="datetime-local" step="60" />
+          </label>
+          <button id="applyScheduleButton" class="compact-button" type="button">새 일정 적용</button>
+          <p id="scheduleSummary" class="settings-note"></p>
+        </div>
+
+        <div class="tts-settings">
+          <label class="switch-row">
+            <span>TTS 안내 사용</span>
+            <input id="ttsEnabledInput" type="checkbox" checked />
+          </label>
+          <label>
+            TTS 음성
+            <select id="voiceSelect"></select>
+          </label>
+          <label>
+            TTS 볼륨 <output id="ttsVolumeOutput">90%</output>
+            <input id="ttsVolumeInput" type="range" min="0" max="1" step="0.05" value="0.9" />
+          </label>
+          <label>
+            음원·효과음 볼륨 <output id="audioVolumeOutput">85%</output>
+            <input id="audioVolumeInput" type="range" min="0" max="1" step="0.05" value="0.85" />
+          </label>
+        </div>
+
+        <div class="test-controls" aria-label="오디오 테스트">
+          <h3>재생 테스트</h3>
+          <div class="test-grid">
+            <button type="button" data-test="listening">듣기평가 음원 테스트</button>
+            <button type="button" data-test="tick">tick 테스트</button>
+            <button type="button" data-test="tts">TTS 테스트</button>
+            <button type="button" data-test="jingle">종료 jingle 테스트</button>
+            <button type="button" data-test="ending-song">시험종료송 테스트</button>
+            <button type="button" data-test="ending-sequence">종료 시퀀스 테스트</button>
+          </div>
+          <button id="stopTestButton" class="stop-button" type="button" disabled>테스트 정지</button>
+          <p id="testStatus" class="settings-note">테스트 대기</p>
+        </div>
+
+        <section id="devPanel" class="dev-panel" hidden>
+          <h3>개발용 시점 점프</h3>
+          <p class="settings-note">URL에 <code>?dev=1</code>을 붙인 경우에만 표시됩니다.</p>
+          <div id="devButtons" class="test-grid"></div>
+        </section>
+      </aside>
+    </div>
+
+    <dialog id="pastScheduleDialog" class="past-dialog">
+      <h2>기본 종료 시각이 지났습니다</h2>
+      <p>오늘 시험을 종료 상태로 열거나, 내일 같은 시각에 새 시험을 예약하세요.</p>
+      <div class="dialog-actions">
+        <button id="scheduleTomorrowButton" class="primary-button" type="button">내일 20:20 새 시험</button>
+        <button id="openEndedButton" class="quiet-button" type="button">오늘 종료 상태 보기</button>
+      </div>
+    </dialog>
+
+    <div id="toast" class="toast" role="status" aria-live="polite"></div>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>
